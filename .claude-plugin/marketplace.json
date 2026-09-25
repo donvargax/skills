@@ -1,0 +1,13 @@
+{
+  "name": "donvargax-skills",
+  "owner": {
+    "name": "donvargax"
+  },
+  "plugins": [
+    {
+      "name": "donvargax-skills",
+      "source": "./",
+      "description": "Python quality loop (CRAP, SCRAP, mutation testing), Markdown to Confluence publishing, and licensed image fetching."
+    }
+  ]
+}

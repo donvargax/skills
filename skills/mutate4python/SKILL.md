@@ -1,38 +1,54 @@
 ---
 name: mutate4python
-description: Run branch-diff mutation testing and use surviving mutants as blocking quality feedback.
-hidden: false
+description: Run mutation testing on a Python module, scoped to code changed since the last run, and report surviving mutants as tests that do not actually catch bugs.
+when_to_use: Use when asked whether the tests for a module are strong enough, when hardening a module before release, or as the final quality check on a feature branch. Examples — "are my tests for config.py actually good?", "run mutation testing on the changed files", "any surviving mutants?".
 ---
 
 # mutate4python
 
-Use this skill to execute mutation testing for changed `app/**/*.py` files and treat survivors as blocking defects.
+Mutation testing changes the code (flip a comparison, swap `and` for `or`, replace `0` with `1`) and re-runs the tests. A mutant that survives means no test noticed the change. Survivors are the actionable output.
 
 ## Available scripts
 
-- `scripts/mutate4python.py` - Run mutation testing for Python modules.
+- `scripts/mutate4python.py` - Self-contained (`uv run`) mutation runner. One module per invocation. Uses coverage to select only covered mutation sites and a manifest to skip scopes unchanged since the last run.
 
 ## Workflow
 
-1. Run branch-diff mutation tests:
+1. Run on a module, only mutating scopes changed since the last run:
 
 ```bash
-python scripts/mutate4python.py app/config.py --since-last-run --test-command "uv run pytest"
+uv run skills/mutate4python/scripts/mutate4python.py src/pkg/config.py --since-last-run --test-command "uv run pytest"
 ```
 
-2. If survivors exist, treat as blocking and fix tests/logic.
-3. Re-run until no survivors remain.
-4. Optionally run with a different test command:
+2. Run everything in the module (first run, or after a large refactor):
 
 ```bash
-python scripts/mutate4python.py app/security/context.py --mutate-all --test-command "uv run pytest"
+uv run skills/mutate4python/scripts/mutate4python.py src/pkg/config.py --mutate-all --test-command "uv run pytest"
 ```
+
+3. Preview mutation sites without running tests:
+
+```bash
+uv run skills/mutate4python/scripts/mutate4python.py src/pkg/config.py --scan
+```
+
+4. Restrict to specific lines (for example the lines of a PR diff):
+
+```bash
+uv run skills/mutate4python/scripts/mutate4python.py src/pkg/config.py --lines 12,18,44
+```
+
+5. For each survivor: write the test that kills it, or delete the dead logic. Re-run until no survivors remain, then `--update-manifest` to record the new baseline.
 
 ## Notes
 
-- Mutation survivors are blocking for feature completion in this repository.
-- For branch-diff execution across changed files, use the repo command:
+- The script runs one module at a time. To cover a branch, list changed modules with `git diff --name-only main...HEAD -- '*.py'` and loop.
+- Mutation testing is slow. Run `crap4python` first and only mutate modules that score high.
+- Whether survivors block merges is the consuming project's policy. Put that rule in the project's CLAUDE.md.
 
-```bash
-uv run quality-loop mutate-changed --base-ref main...HEAD --test-command "uv run pytest"
-```
+## Open source alternatives
+
+- [mutmut](https://mutmut.readthedocs.io/) - most active Python mutation tester, coverage-aware, incremental cache.
+- [cosmic-ray](https://cosmic-ray.readthedocs.io/) - broadest operator set, parallel workers, `cr-filter-git` for diff scoping.
+
+The bundled script exists for single-file `uv run` portability and its scope-level manifest (skip unchanged functions). If those matter less than operator coverage and community support, use mutmut and delete this script.

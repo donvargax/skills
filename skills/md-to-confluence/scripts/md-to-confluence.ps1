@@ -324,7 +324,7 @@ try {
 		Write-Host ("{0}`t{1}`t{2}`t{3}" -f $a.id, $a.title, $media, $size)
 	}
 
-	$Site = ""   # e.g. mycompany
+	$Site = $env:CONFLUENCE_SITE
 	Write-Host "==> Page attachments URL"
 	Write-Host "https://$Site.atlassian.net/wiki/pages/viewpageattachments.action?pageId=$PageId"
 

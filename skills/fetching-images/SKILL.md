@@ -1,16 +1,8 @@
 ---
-name: Fetching Relevant Images
-description: This skill should be used when you need images for any project.
-keywords: images, photos, wikimedia, unsplash, pixabay, copyright, fair use, embedding, CC0, public domain
+name: fetching-images
+description: Find and embed legally usable images (Wikimedia Commons, Unsplash, Pexels, Pixabay) with the right license, attribution, and a verified direct URL.
+when_to_use: Use when a page, doc, slide deck, or README needs a photo, icon, or illustration, or when the user asks about image licensing, CC0, fair use, or attribution. Examples — "find a photo of paella for the hero section", "is this Wikimedia image OK for a commercial site?", "get me a rocket icon with a CC0 license".
 ---
-
-## OpenCode Adaptation Notes
-
-- This file was migrated from Warren Claude Context Orchestrator for OpenCode use.
-- Invoke this skill explicitly when needed.
-- Referenced assets are localized under this skill directory.
-- Validate commands against your local OpenCode setup before automation.
-
 
 # Fetching Relevant Images
 
@@ -81,19 +73,19 @@ Commands:
 
 ```bash
 # Search Wikimedia photos (default provider/type)
-uv run ./scripts/fetch_wikimedia_image.py "paella valenciana"
+uv run ./scripts/fetch_image.py "paella valenciana"
 
 # Search Unsplash for icon-like results
-uv run ./scripts/fetch_wikimedia_image.py "rocket" --source unsplash --type icon --count 10
+uv run ./scripts/fetch_image.py "rocket" --source unsplash --type icon --count 10
 
 # Search Pexels for vector-like results
-uv run ./scripts/fetch_wikimedia_image.py "coffee" --source pexels --type vector --count 10
+uv run ./scripts/fetch_image.py "coffee" --source pexels --type vector --count 10
 
 # Search Pixabay without type filtering
-uv run ./scripts/fetch_wikimedia_image.py "startup team" --source pixabay --type any --count 10
+uv run ./scripts/fetch_image.py "startup team" --source pixabay --type any --count 10
 
 # Wikimedia-only: extract URL from a specific File: page
-uv run ./scripts/fetch_wikimedia_image.py \
+uv run ./scripts/fetch_image.py \
   --file-page "https://commons.wikimedia.org/wiki/File:01_Paella_Valenciana_original.jpg" \
   --verify --html --alt "Authentic Valencian paella"
 ```
@@ -120,11 +112,11 @@ Attribution:  Photo: Wikimedia Commons, [License]
 </div>
 ```
 
-**Script location:** `./scripts/fetch_wikimedia_image.py`
+**Script location:** `./scripts/fetch_image.py`
 
 **Alias tip:** Add to your shell profile:
 ```bash
-alias wikimg='uv run ./scripts/fetch_wikimedia_image.py'
+alias wikimg='uv run ./scripts/fetch_image.py'
 ```
 Then use: `wikimg "mofongo" --source wikimedia --type photo --count 5`
 

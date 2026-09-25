@@ -7,22 +7,22 @@
 Fetch images from multiple providers with a unified CLI.
 
 Usage:
-    uv run ./fetch_wikimedia_image.py [args]
-    uv run ./fetch_wikimedia_image.py "topic" [--count 5] [--source wikimedia] [--type photo] [--json]
-    uv run ./fetch_wikimedia_image.py --file-page URL [--verify] [--html]
+    uv run ./fetch_image.py [args]
+    uv run ./fetch_image.py "topic" [--count 5] [--source wikimedia] [--type photo] [--json]
+    uv run ./fetch_image.py --file-page URL [--verify] [--html]
 
 Examples:
     # Search Wikimedia and get URLs directly
-    uv run ./fetch_wikimedia_image.py "mofongo puerto rico" --count 3
+    uv run ./fetch_image.py "mofongo puerto rico" --count 3
 
     # Search Unsplash vectors/icons/photos (requires UNSPLASH_ACCESS_KEY)
-    uv run ./fetch_wikimedia_image.py "rocket" --source unsplash --type vector --count 10
+    uv run ./fetch_image.py "rocket" --source unsplash --type vector --count 10
 
     # Search with JSON output
-    uv run ./fetch_wikimedia_image.py "Old San Juan street" --json
+    uv run ./fetch_image.py "Old San Juan street" --json
 
     # Get URL from specific File: page
-    uv run ./fetch_wikimedia_image.py --file-page "https://commons.wikimedia.org/wiki/File:Mofongo.jpg" --verify --html
+    uv run ./fetch_image.py --file-page "https://commons.wikimedia.org/wiki/File:Mofongo.jpg" --verify --html
 """
 
 import sys
