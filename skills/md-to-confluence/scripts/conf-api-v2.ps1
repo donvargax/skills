@@ -22,10 +22,19 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# --- Hardcoded config ---
-$Site     = ""   # e.g. mycompany
-$Email    = ""
-$ApiToken = ""
+# --- Config from environment ---
+# Required:
+#   CONFLUENCE_SITE       e.g. mycompany  (the <site> in https://<site>.atlassian.net)
+#   CONFLUENCE_EMAIL      Atlassian account email
+#   CONFLUENCE_API_TOKEN  API token from https://id.atlassian.com/manage-profile/security/api-tokens
+$Site     = $env:CONFLUENCE_SITE
+$Email    = $env:CONFLUENCE_EMAIL
+$ApiToken = $env:CONFLUENCE_API_TOKEN
+foreach ($pair in @(@("CONFLUENCE_SITE", $Site), @("CONFLUENCE_EMAIL", $Email), @("CONFLUENCE_API_TOKEN", $ApiToken))) {
+	if ([string]::IsNullOrWhiteSpace($pair[1])) {
+		throw "Missing required environment variable: $($pair[0])"
+	}
+}
 $BaseUrl  = "https://$Site.atlassian.net/wiki/api/v2"
 
 $pair = "$Email`:$ApiToken"
